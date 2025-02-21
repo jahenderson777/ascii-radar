@@ -104,17 +104,8 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 (defn gen-test-sample [width height])
 
 
-(defn pre-process [sample]
-  (-> sample
-      str/trim
-      (str/replace #"[\n ]" "")))
-
-(pre-process (nth known-invaders 0))
-
 (defn score [a b]
-  (let [;a' (pre-process a)
-        ;b' (pre-process b)
-        paired (map vector a b)
+  (let [paired (map vector a b)
         s (reduce (fn [score [ax bx]]
                     (if (or (= ax \U)
                             (= bx \U))
@@ -124,9 +115,7 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                         score ;; we have no match
                         )))
                   0 paired)]
-    (float (/ s (count a)))
-    
-    ))
+    (float (/ s (count a)))))
 
 (score (nth known-invaders 0)
        "
@@ -141,18 +130,6 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
        )
 
 
-(pre-process (nth known-invaders 0))
-(pre-process "
-             --o-----o--
-             ---o---o---
-             --ooooooo--
-             -oo-ooo-oo-
-             ooooooooooo
-             o-ooooooo-o
-             o-o-----o-o
-             ---oo-oo--o")
-
-(count (pre-process (nth known-invaders 0)))
 
 ;; ok scoring two samples is basically working, now for windowing over a larger radar sample
 ;; need a function that takes a big radar sample, a width and a height, and an x & y position, and gives the sub-sample
@@ -202,9 +179,24 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
           []
           (all-locations radar)))
 
+(defn scan-for-invader [radar invader threshold]
+  (let [invader (str/trim invader)
+        invader-lines (str/split-lines invader)
+        invader-w (count (first invader-lines))
+        invader-h (count invader-lines)]
+    (reduce (fn [v [x y]]
+              (let [samp (sub-sample radar invader-w invader-h x y)
+                    s (score samp (apply str invader-lines))]
+                (if (> s threshold)
+                  (conj v [[x y] s])
+                  v)))
+            []
+            (all-locations radar))))
 
 
-(sub-sample radar 4 8 1 4)
+(map (fn [invader]
+       (scan-for-invader radar invader 0.7))
+     known-invaders)
 
 
 (defn -main [& args]
