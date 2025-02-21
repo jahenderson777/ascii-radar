@@ -1,2 +1,0 @@
-(ns ascii-radar.core)
-

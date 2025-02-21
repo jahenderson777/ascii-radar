@@ -94,16 +94,16 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
     (float (/ s (count a)))))
 
 (comment
-  (score (nth known-invaders 0)
-         "
-                    --------o--
-                    ---o---o---
-                    --ooooooo--
-                    -oo-ooo-oo-
-                    ooooooooooo
-                    o-ooooooo-o
-                    o-o-----o-o
-                    ---oo-oo-oo"
+  (score (apply str (str/split-lines (str/trim (nth known-invaders 0))))
+         (apply str (str/split-lines (str/trim "
+--------oo-
+---o---o---
+--ooooooo--
+-oo-ooo-oo-
+ooooooooooo
+o-ooooooo-o
+o-o-----o-o
+o--oo-oooo-")))
          )
   )
 
