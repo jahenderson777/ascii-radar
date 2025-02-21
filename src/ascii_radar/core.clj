@@ -3,7 +3,7 @@
   
   (:gen-class))
 
-
+(def detection-threshold 0.75)
 
 (def known-invaders
   ["
@@ -79,30 +79,6 @@ o-----oo-------------------o--o-----o-----------o------o-------o----o-----------
 o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o------------oooo-o------oo--
 -----o----------ooooooooo--------------oo--------------oo-----o-----o-o--o------o----------o----o---")
 
-;; Your Clojure application must take a radar sample as an argument and reveal possible locations of those pesky invaders.
-
-
-;; so I guess we need to scan over a given radar sample, shifting a 'window' around the same size of each invader,
-;; seeing how closely that 'window' matches a known invader, generating like a score for how closely we get a match.
-
-;; we'll do the scanning over the whole sample later, let's first tackle being given a window that is the same size
-;; as our known invader.
-
-;; other thoughts: when dealing with the edges we might want to have a third state of a grid position being 'unknown',
-;; meaning this is the outside of the radar.
-
-;; also, we might want to give more weight to bits of the window that are closer to the center, but perhaps lets 
-;; ignore that for now
-
-
-;; maybe there's some maths trick to very quickly score a sample by like converting it to a binary number,
-;; but lets just do it simply for now
-
-
-;; we can probably forget about new lines in the sample, and just consider it a long string.
-
-(defn gen-test-sample [width height])
-
 
 (defn score [a b]
   (let [paired (map vector a b)
@@ -117,8 +93,9 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                   0 paired)]
     (float (/ s (count a)))))
 
-(score (nth known-invaders 0)
-       "
+(comment
+  (score (nth known-invaders 0)
+         "
                     --------o--
                     ---o---o---
                     --ooooooo--
@@ -127,12 +104,8 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                     o-ooooooo-o
                     o-o-----o-o
                     ---oo-oo-oo"
-       )
-
-
-
-;; ok scoring two samples is basically working, now for windowing over a larger radar sample
-;; need a function that takes a big radar sample, a width and a height, and an x & y position, and gives the sub-sample
+         )
+  )
 
 (defn add-unknowns [sample w h]
   (let [lines (str/split-lines sample)
@@ -142,18 +115,16 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                     lines)
         start-end (repeat h (apply str (repeat (+ (count (first lines)) (* 2 w)) 
                                                "U")))]
-    (vec (concat start-end middle start-end)))
+    (vec (concat start-end middle start-end))))
+
+(comment
+  (add-unknowns radar 6 10)
   )
-
-
-(add-unknowns radar 6 10)
 
 (defn sub-sample [sample w h x y]
   (let [sample' (add-unknowns sample w h)
         lines (subvec sample' y (+ y h))]
     (map (fn [l] (subs l x (+ x w))) lines)))
-
-;; now we need a seq of x,y positions to map over
 
 (defn all-locations [sample]
   (let [lines (str/split-lines sample)
@@ -162,21 +133,6 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
     (for [y (range sample-h)
           x (range sample-w)]
       [x y])))
-
-;; maybe reduce over all-locatins and only collect the ones above a threshold
-
-(let [invader (str/trim (nth known-invaders 0))
-      invader-lines (str/split-lines invader)
-      invader-w (count (first invader-lines))
-      invader-h (count invader-lines)]
-  (reduce (fn [v [x y]]
-            (let [samp (sub-sample radar invader-w invader-h x y)
-                  s (score (apply str samp) (apply str invader-lines))]
-              (if (> s 0.7)
-                (conj v [[x y] s])
-                v)))
-          []
-          (all-locations radar)))
 
 (defn scan-for-invader [radar invader threshold]
   (let [invader (str/trim invader)
@@ -187,18 +143,17 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
               (let [samp (sub-sample radar invader-w invader-h x y)
                     s (score (apply str samp) (apply str invader-lines))]
                 (if (> s threshold)
-                  (do (println "match, invader" s)
-                      (println invader)
-                      (println "samp")
-                      (println (str/join "\n" samp))
-                      (conj v [[x y] s]))
+                  (conj v {:location [x y] 
+                           :score s
+                           :invader invader
+                           :sample (str/join "\n" samp)})
                   v)))
             []
             (all-locations radar))))
 
 
 (map (fn [invader]
-       (scan-for-invader radar invader 0.75))
+       (scan-for-invader radar invader detection-threshold))
      known-invaders)
 
 
