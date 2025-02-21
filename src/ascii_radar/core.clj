@@ -37,6 +37,15 @@ o-o--o-o"
 ;; other thoughts: when dealing with the edges we might want to have a third state of a grid position being 'unknown',
 ;; meaning this is the outside of the radar.
 
+;; also, we might want to give more weight to bits of the window that are closer to the center, but perhaps lets 
+;; ignore that for now
+
+
+;; maybe there's some maths trick to very quickly score a sample by like converting it to a binary number,
+;; but lets just do it simply for now
+
+
+
 
 (defn -main [& args]
   )
