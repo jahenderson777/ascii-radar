@@ -112,9 +112,9 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 (pre-process (nth known-invaders 0))
 
 (defn score [a b]
-  (let [a' (pre-process a)
-        b' (pre-process b)
-        paired (map vector a' b')
+  (let [;a' (pre-process a)
+        ;b' (pre-process b)
+        paired (map vector a b)
         s (reduce (fn [score [ax bx]]
                     (if (or (= ax \U)
                             (= bx \U))
@@ -124,7 +124,7 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                         score ;; we have no match
                         )))
                   0 paired)]
-    (float (/ s (count a')))
+    (float (/ s (count a)))
     
     ))
 
@@ -174,8 +174,34 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 (defn sub-sample [sample w h x y]
   (let [sample' (add-unknowns sample w h)
         lines (subvec sample' y (+ y h))]
-    (map (fn [l] (subs l x (+ x w)))lines)) 
+    (apply str (map (fn [l] (subs l x (+ x w))) lines))) 
   )
+
+;; now we need a seq of x,y positions to map over
+
+(defn all-locations [sample]
+  (let [lines (str/split-lines sample)
+        sample-w (count (first lines))
+        sample-h (count lines)]
+    (for [y (range sample-h)
+          x (range sample-w)]
+      [x y])))
+
+;; maybe reduce over all-locatins and only collect the ones above a threshold
+
+(let [invader (str/trim (nth known-invaders 0))
+      invader-lines (str/split-lines invader)
+      invader-w (count (first invader-lines))
+      invader-h (count invader-lines)]
+  (reduce (fn [v [x y]]
+            (let [samp (sub-sample radar invader-w invader-h x y)
+                  s (score samp (apply str invader-lines))]
+              (if (> s 0.7)
+                (conj v [[x y] s])
+                v)))
+          []
+          (all-locations radar)))
+
 
 
 (sub-sample radar 4 8 1 4)
