@@ -165,19 +165,20 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
                     lines)
         start-end (repeat h (apply str (repeat (+ (count (first lines)) (* 2 w)) 
                                                "U")))]
-    (concat start-end middle start-end))
+    (vec (concat start-end middle start-end)))
   )
 
 
 (add-unknowns radar 6 10)
 
 (defn sub-sample [sample w h x y]
-  ;; need to add Unknown lines before and after, and Unknown chars at the start and end of each line
-
-
+  (let [sample' (add-unknowns sample w h)
+        lines (subvec sample' y (+ y h))]
+    (map (fn [l] (subs l x (+ x w)))lines)) 
   )
 
 
+(sub-sample radar 4 8 1 4)
 
 
 (defn -main [& args]
