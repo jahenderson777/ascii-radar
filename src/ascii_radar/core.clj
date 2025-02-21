@@ -151,8 +151,7 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 (defn sub-sample [sample w h x y]
   (let [sample' (add-unknowns sample w h)
         lines (subvec sample' y (+ y h))]
-    (apply str (map (fn [l] (subs l x (+ x w))) lines))) 
-  )
+    (map (fn [l] (subs l x (+ x w))) lines)))
 
 ;; now we need a seq of x,y positions to map over
 
@@ -172,7 +171,7 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
       invader-h (count invader-lines)]
   (reduce (fn [v [x y]]
             (let [samp (sub-sample radar invader-w invader-h x y)
-                  s (score samp (apply str invader-lines))]
+                  s (score (apply str samp) (apply str invader-lines))]
               (if (> s 0.7)
                 (conj v [[x y] s])
                 v)))
@@ -186,16 +185,20 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
         invader-h (count invader-lines)]
     (reduce (fn [v [x y]]
               (let [samp (sub-sample radar invader-w invader-h x y)
-                    s (score samp (apply str invader-lines))]
+                    s (score (apply str samp) (apply str invader-lines))]
                 (if (> s threshold)
-                  (conj v [[x y] s])
+                  (do (println "match, invader" s)
+                      (println invader)
+                      (println "samp")
+                      (println (str/join "\n" samp))
+                      (conj v [[x y] s]))
                   v)))
             []
             (all-locations radar))))
 
 
 (map (fn [invader]
-       (scan-for-invader radar invader 0.7))
+       (scan-for-invader radar invader 0.75))
      known-invaders)
 
 
