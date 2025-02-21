@@ -3,6 +3,8 @@
   
   (:gen-class))
 
+
+
 (def known-invaders
   ["
 --o-----o--
@@ -53,7 +55,7 @@ o-o--o-o"
 (defn pre-process [sample]
   (-> sample
       str/trim
-      (str/replace #"\n" "")))
+      (str/replace #"[\n ]" "")))
 
 (pre-process (nth known-invaders 0))
 
@@ -70,12 +72,33 @@ o-o--o-o"
                         score ;; we have no match
                         )))
                   0 paired)]
-    (/ s (count a'))))
+    (float (/ s (count a')))
+    
+    ))
 
 (score (nth known-invaders 0)
-       (nth known-invaders 0)
+       "
+                    --------o--
+                    ---o---o---
+                    --ooooooo--
+                    -oo-ooo-oo-
+                    ooooooooooo
+                    o-ooooooo-o
+                    o-o-----o-o
+                    ---oo-oo-oo"
        )
 
+
+(pre-process (nth known-invaders 0))
+(pre-process "
+             --o-----o--
+             ---o---o---
+             --ooooooo--
+             -oo-ooo-oo-
+             ooooooooooo
+             o-ooooooo-o
+             o-o-----o-o
+             ---oo-oo--o")
 
 (count (pre-process (nth known-invaders 0)))
 (defn -main [& args]
