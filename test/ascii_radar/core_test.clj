@@ -94,6 +94,16 @@ o---------
             {:location [-1 0], :score 0.0, :invader "o", :sample "U"}
             {:location [0 0], :score 1.0, :invader "o", :sample "o"}]
            
-           (core/scan-for-invader "o" "o" 0.0)))))
+           (core/scan-for-invader "o" "o" 0.0))))
+  
+  (testing "invader bigger than radar"
+    (is (= [{:location [-1 -2], :score 0.0, :invader "o\no", :sample "U\nU"}
+            {:location [0 -2], :score 0.0, :invader "o\no", :sample "U\nU"}
+            {:location [-1 -1], :score 0.0, :invader "o\no", :sample "U\nU"}
+            {:location [0 -1], :score 0.5, :invader "o\no", :sample "U\no"}
+            {:location [-1 0], :score 0.0, :invader "o\no", :sample "U\nU"}
+            {:location [0 0], :score 0.5, :invader "o\no", :sample "o\nU"}]
+  
+           (core/scan-for-invader "o" "o\no" 0.0)))))
 
 (run-tests)

@@ -152,10 +152,17 @@ o--oo-oooo-")))
             []
             locations)))
 
+(defn print-results [results]
+  (doseq [{:keys [location score invader sample]} results]
+    (println "Invader found at: " location " detection score: " score)
+    (println invader)
+    (println "")
+    (println sample)))
 
-#_(map (fn [invader]
-       (scan-for-invader radar invader 0.7))
-     known-invaders)
+
+(doall (map (fn [invader]
+              (print-results (scan-for-invader radar invader 0.6)))
+            known-invaders))
 
 (doall
  (scan-for-invader (str/trim "-o\n--")
