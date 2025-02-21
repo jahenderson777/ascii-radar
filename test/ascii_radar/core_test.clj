@@ -70,7 +70,7 @@ o---------
 --o-------
 ----------
 ----------"
-           (str/join "\n" (core/sub-sample core/radar 10 10 10 10)))))
+           (str/join "\n" (core/sub-sample (str/split-lines core/radar) 10 10 0 0)))))
   
   (testing "basic sub-sample, should be not equal"
     (is (not= "----o--oo-
@@ -83,6 +83,17 @@ o---------
   --o-------
   ----------
   ----------"
-           (str/join "\n" (core/sub-sample core/radar 11 10 10 10))))))
+           (str/join "\n" (core/sub-sample (str/split-lines core/radar) 11 10 10 10))))))
+
+
+
+(deftest test-scan-for-invader
+  (testing "simplest"
+    (is (= [{:location [-1 -1], :score 0.0, :invader "o", :sample "U"}
+            {:location [0 -1], :score 0.0, :invader "o", :sample "U"}
+            {:location [-1 0], :score 0.0, :invader "o", :sample "U"}
+            {:location [0 0], :score 1.0, :invader "o", :sample "o"}]
+           
+           (core/scan-for-invader "o" "o" 0.0)))))
 
 (run-tests)

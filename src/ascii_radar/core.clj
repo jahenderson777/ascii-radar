@@ -121,15 +121,13 @@ o--oo-oooo-")))
   (add-unknowns radar 6 10)
   )
 
-(defn sub-sample [sample w h x y]
-  (let [sample' (add-unknowns sample w h)
-        lines (subvec sample' y (+ y h))]
+(defn sub-sample [sample w h x y] 
+  (let [lines (subvec sample y (+ y h))]
     (map (fn [l] (subs l x (+ x w))) lines)))
 
-(defn all-locations [sample]
-  (let [lines (str/split-lines sample)
-        sample-w (count (first lines))
-        sample-h (count lines)]
+(defn all-locations [sample invader-w invader-h]
+  (let [sample-w (+ invader-w (count (first sample)))
+        sample-h (+ invader-h (count sample))]
     (for [y (range sample-h)
           x (range sample-w)]
       [x y])))
@@ -138,11 +136,13 @@ o--oo-oooo-")))
   (let [invader (str/trim invader)
         invader-lines (str/split-lines invader)
         invader-w (count (first invader-lines))
-        invader-h (count invader-lines)]
+        invader-h (count invader-lines)
+        locations (all-locations (str/split-lines radar) invader-w invader-h)
+        radar (add-unknowns radar invader-w invader-h)]
     (reduce (fn [v [x y]]
               (let [samp (sub-sample radar invader-w invader-h x y)
                     s (score (apply str samp) (apply str invader-lines))]
-                (if (> s threshold)
+                (if (>= s threshold)
                   (conj v {:location [(- x invader-w) 
                                       (- y invader-h)] 
                            :score s
@@ -150,13 +150,22 @@ o--oo-oooo-")))
                            :sample (str/join "\n" samp)})
                   v)))
             []
-            (all-locations radar))))
+            locations)))
 
 
-(map (fn [invader]
+#_(map (fn [invader]
        (scan-for-invader radar invader 0.7))
      known-invaders)
 
+(doall
+ (scan-for-invader (str/trim "-o\n--")
+                   (str/trim "-o\n--") 
+                   0.0)
+ 
+
+ )
+
+(scan-for-invader "o" "o" 0.0)
 
 (defn -main [& args]
   )
