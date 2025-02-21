@@ -45,8 +45,39 @@ o-o--o-o"
 ;; but lets just do it simply for now
 
 
+;; we can probably forget about new lines in the sample, and just consider it a long string.
+
+(defn gen-test-sample [width height])
 
 
+(defn pre-process [sample]
+  (-> sample
+      str/trim
+      (str/replace #"\n" "")))
+
+(pre-process (nth known-invaders 0))
+
+(defn score [a b]
+  (let [a' (pre-process a)
+        b' (pre-process b)
+        paired (map vector a' b')
+        s (reduce (fn [score [ax bx]]
+                    (if (or (= ax \U)
+                            (= bx \U))
+                      score ;; we have an Unknown location, e.g. beyond the edge
+                      (if (= ax bx)
+                        (+ score 1) ;; we have a match
+                        score ;; we have no match
+                        )))
+                  0 paired)]
+    (/ s (count a'))))
+
+(score (nth known-invaders 0)
+       (nth known-invaders 0)
+       )
+
+
+(count (pre-process (nth known-invaders 0)))
 (defn -main [& args]
   )
 
