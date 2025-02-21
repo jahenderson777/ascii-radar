@@ -157,8 +157,24 @@ o--oo------o-----oo--o-oo------------oo--o------o--o-------------oo----o--------
 ;; ok scoring two samples is basically working, now for windowing over a larger radar sample
 ;; need a function that takes a big radar sample, a width and a height, and an x & y position, and gives the sub-sample
 
+(defn add-unknowns [sample w h]
+  (let [lines (str/split-lines sample)
+        middle (map (fn [l]
+                      (let [u (apply str (repeat w "U"))]
+                        (str u l u)))
+                    lines)
+        start-end (repeat h (apply str (repeat (+ (count (first lines)) (* 2 w)) 
+                                               "U")))]
+    (concat start-end middle start-end))
+  )
+
+
+(add-unknowns radar 6 10)
+
 (defn sub-sample [sample w h x y]
   ;; need to add Unknown lines before and after, and Unknown chars at the start and end of each line
+
+
   )
 
 
