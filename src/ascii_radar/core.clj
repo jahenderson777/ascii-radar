@@ -143,7 +143,8 @@ o--oo-oooo-")))
               (let [samp (sub-sample radar invader-w invader-h x y)
                     s (score (apply str samp) (apply str invader-lines))]
                 (if (> s threshold)
-                  (conj v {:location [x y] 
+                  (conj v {:location [(- x invader-w) 
+                                      (- y invader-h)] 
                            :score s
                            :invader invader
                            :sample (str/join "\n" samp)})
@@ -153,7 +154,7 @@ o--oo-oooo-")))
 
 
 (map (fn [invader]
-       (scan-for-invader radar invader detection-threshold))
+       (scan-for-invader radar invader 0.7))
      known-invaders)
 
 

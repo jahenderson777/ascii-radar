@@ -24,8 +24,6 @@ oooooooo
 -o-oo-o-
 o-o--o-o")
 
-
-
 (deftest test-score 
   (testing "testing that score gives 1.0 when both inputs are equal"
     (is (= 1.0
@@ -59,5 +57,32 @@ o-ooooooo-o
 o-o-----o-o
 ---oo-oo---"))))))))
 
+
+(deftest test-sub-sample
+  (testing "basic sub-sample"
+    (is (= "----o--oo-
+--o-o-----
+--o-------
+-------o--
+------o---
+-o--o-----
+o---------
+--o-------
+----------
+----------"
+           (str/join "\n" (core/sub-sample core/radar 10 10 10 10)))))
+  
+  (testing "basic sub-sample, should be not equal"
+    (is (not= "----o--oo-
+  --o-o-----
+  --o-------
+  -------o--
+  ------o---
+  -o--o-----
+  o---------
+  --o-------
+  ----------
+  ----------"
+           (str/join "\n" (core/sub-sample core/radar 11 10 10 10))))))
 
 (run-tests)
