@@ -3,7 +3,7 @@
             [clojure.string :as str]) 
   (:gen-class))
 
-(def detection-threshold 0.75)
+(def detection-threshold 0.74)
 
 (defn score [a b]
   (let [paired (map vector a b)
@@ -16,11 +16,11 @@
 
 (defn add-unknowns [radar w h]
   (let [middle (map (fn [l]
-                      (let [u (str/join (repeat w "U"))]
+                      (let [u (str/join (repeat w "?"))]
                         (str u l u)))
                     radar)
         final-w (+ (count (first radar)) (* 2 w))
-        start-end (repeat h (str/join (repeat final-w "U")))]
+        start-end (repeat h (str/join (repeat final-w "?")))]
     (vec (concat start-end middle start-end))))
 
 (defn sub-sample [sample w h x y] 
@@ -53,35 +53,31 @@
 
 (defn print-results [results]
   (doseq [{:keys [location score invader sample]} results]
-    (println "Invader found at: " location " detection score: " score)
+    (println "\n\nInvader found at: " location " detection score: " score)
     (println invader)
     (println "")
     (println sample)))
 
-(doall (map (fn [invader]
-              (print-results (scan-for-invader sample-data/radar invader detection-threshold)))
-            [sample-data/invader-1 sample-data/invader-2]))
-
-(scan-for-invader ["o"] ["o"] 0.0)
-
-
-
 (defn gen-radar [w h]
   (repeat h (str/join (repeat w "-"))))
 
-(gen-radar 10 10)
-
 (defn add-invader-to-radar [radar invader x y]
   (map-indexed (fn [idx l]
-                 (let [invader-w (count (first invader))
+                 (let [radar-w (count (first radar))
+                       invader-w (count (first invader))
                        invader-h (count invader)
                        y' (- idx y)]
                    (if (and (>= y' 0) (< y' invader-h))
                      (let [invader-l (nth invader y')]
-                       (str (subs l 0 x) invader-l (subs l (+ x invader-w))))
+                       (-> (str (when (pos? x)
+                                  (subs l 0 x))
+                                (subs invader-l (if (neg? x) (abs x) 0))
+                                (when (< (+ x invader-w) radar-w)
+                                  (subs l (+ x invader-w))))
+                           (subs 0 radar-w)))
                      l)))
                radar))
 
-(add-invader-to-radar (gen-radar 10 10) ["oo" "oo"] 4 4)
-
-(defn -main [& args])
+(defn -main [& args]
+  (doseq [invader [sample-data/invader-1 sample-data/invader-2]]
+    (print-results (scan-for-invader sample-data/radar invader detection-threshold))))
