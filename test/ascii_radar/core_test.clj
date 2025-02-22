@@ -1,7 +1,9 @@
 (ns ascii-radar.core-test
   (:require [clojure.test :refer [deftest is run-tests testing]]
+            [clojure.spec.test.alpha :as stest]
             [ascii-radar.core :as core]
             [ascii-radar.sample-data :as sample-data]
+            [ascii-radar.core-spec]
             [clojure.string :as str]))
 
 (deftest test-score 
@@ -109,5 +111,15 @@
                    (core/scan-for-invader
                     (core/add-invader-to-radar (core/gen-radar 30 30) sample-data/invader-1 x y)
                     sample-data/invader-1 0.7)))))))
+
+(comment
+  (deftest run-spec-checks
+    (let [results (stest/check [`core/score `core/add-unknowns 
+                              ;`core/sub-sample
+                                ])]
+      (doseq [result results]
+        (is (nil? (:failure result))
+            (str "Spec check failed for: " (:sym result) "\n" (:failure result))))))
+  )
 
 (run-tests)
