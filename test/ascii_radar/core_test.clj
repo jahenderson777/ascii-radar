@@ -35,7 +35,6 @@
                        "o-o-----o-o"
                        "---oo-oo---"]))))))
 
-
 (deftest test-sub-sample
   (testing "basic sub-sample"
     (is (= '("----o--oo-"
@@ -49,7 +48,6 @@
              "----------"
              "----------")
            (core/sub-sample sample-data/radar 10 10 0 0)))))
-
 
 (deftest test-scan-for-invader
   (testing "simplest"
