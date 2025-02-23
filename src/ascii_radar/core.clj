@@ -180,6 +180,6 @@
                      l)))
                radar))
 
-(defn -main [& args]
+(defn -main [& _]
   (doseq [invader [sample-data/invader-1 sample-data/invader-2]]
     (print-results (scan-for-invader sample-data/radar invader detection-threshold))))
