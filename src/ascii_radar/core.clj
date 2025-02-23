@@ -13,6 +13,8 @@
   proportion of elements that are equal at the same positions in both sequences.
   
   A score of 1.0 indicates a 100% match, while 0.0 means no elements matched.
+   
+  If `a` contains '?' characters, these represent an unknown with 50% probably of a hit.
 
   Parameters:
   - a: A sequence of elements.
