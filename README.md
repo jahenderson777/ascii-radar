@@ -135,6 +135,26 @@ o-o-----o-o
 ---oo-oo---
 
 
+Invader found at:  [18 -1]  detection score:  0.765625
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+????????
+o--ooo--
+-oooooo-
+oo-oo-oo
+o-oo-o--
+o----o--
+ooooo-o-
+o-o--o--
+
+
 Invader found at:  [42 0]  detection score:  0.875
 ---oo---
 --oooo--
@@ -213,5 +233,25 @@ o-oooooo
 --o--o--
 oo-oo-o-
 --oooo-o
+
+
+Invader found at:  [17 45]  detection score:  0.765625
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+---ooo--
+o-oooo--
+-oooooo-
+oo--o-oo
+oooooooo
+????????
+????????
+????????
 ```
 
