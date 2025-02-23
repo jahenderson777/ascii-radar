@@ -49,3 +49,169 @@ test/
     core_test.clj   # Unit tests for core functions
 ```
 
+
+## Building and Running the Project
+
+### Building the Uberjar
+
+To build the standalone JAR for the project, run the following command:
+
+```bash
+clj -T:uberjar
+```
+
+This will generate a standalone JAR file in the `target` directory.
+
+### Running the Application
+
+Once the Uberjar is built, you can run the application using the following command:
+
+```bash
+java -jar target/ascii-radar-1.0.[git revision count]-standalone.jar
+```
+
+## Expected Output
+
+When the application runs, it detects invaders in a grid of characters (represented by `o` and `-`) and prints their locations along with detection scores. Below is an example of the expected output format:
+
+```
+Invader found at:  [74 1]  detection score:  0.875
+--o-----o--
+---o---o---
+--ooooooo--
+-oo-ooo-oo-
+ooooooooooo
+o-ooooooo-o
+o-o-----o-o
+---oo-oo---
+
+ooo-----o--
+o--o-o-o---
+--o-ooooo--
+oo--ooo-oo-
+ooooooo-ooo
+oooo--ooo-o
+o-o-----o-o
+---oo-oo---
+
+
+Invader found at:  [85 12]  detection score:  0.8636364
+--o-----o--
+---o---o---
+--ooooooo--
+-oo-ooo-oo-
+ooooooooooo
+o-ooooooo-o
+o-o-----o-o
+---oo-oo---
+
+--oo----o--
+-------o---
+o--oooooo--
+-oo--oo--o-
+oo-oooooooo
+o-ooooooo-o
+oo-o----o-o
+--ooo-oo--o
+
+
+Invader found at:  [60 13]  detection score:  0.90909094
+--o-----o--
+---o---o---
+--ooooooo--
+-oo-ooo-oo-
+ooooooooooo
+o-ooooooo-o
+o-o-----o-o
+---oo-oo---
+
+--o-----o--
+-------o---
+--oooo-oo--
+----ooo-oo-
+o--oooooo-o
+o-o-ooooo-o
+o-o-----o-o
+---oo-oo---
+
+
+Invader found at:  [42 0]  detection score:  0.875
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+---oo---
+--ooo-o-
+--ooooo-
+oo--o-oo
+oo-ooooo
+-----o--
+oo-oo-o-
+o-o--ooo
+
+
+Invader found at:  [35 15]  detection score:  0.84375
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+---oo---
+--oooo--
+oooooooo
+oo-oo--o
+-ooooooo
+--o--ooo
+-o-oo---
+oo--oo-o
+
+
+Invader found at:  [16 28]  detection score:  0.859375
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+---o-o--
+-ooooo--
+-oooooo-
+o--oo-oo
+oooooooo
+-ooo-o--
+--ooo-o-
+o-o--ooo
+
+
+Invader found at:  [82 41]  detection score:  0.859375
+---oo---
+--oooo--
+-oooooo-
+oo-oo-oo
+oooooooo
+--o--o--
+-o-oo-o-
+o-o--o-o
+
+---oo---
+--ooooo-
+-oo-ooo-
+oo-o-ooo
+o-oooooo
+--o--o--
+oo-oo-o-
+--oooo-o
+```
+
