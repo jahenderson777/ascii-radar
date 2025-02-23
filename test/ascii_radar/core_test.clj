@@ -53,30 +53,30 @@
 
 (deftest test-scan-for-invader
   (testing "simplest"
-    (is (= [{:location [-1 -1], :score 0.0, :invader "o", :sample "?"}
-            {:location [0 -1], :score 0.0, :invader "o", :sample "?"}
-            {:location [-1 0], :score 0.0, :invader "o", :sample "?"}
+    (is (= [{:location [-1 -1], :score 0.5, :invader "o", :sample "?"}
+            {:location [0 -1], :score 0.5, :invader "o", :sample "?"}
+            {:location [-1 0], :score 0.5, :invader "o", :sample "?"}
             {:location [0 0], :score 1.0, :invader "o", :sample "o"}]
            
            (core/scan-for-invader ["o"] ["o"] 0.0))))
   
   (testing "invader bigger than radar"
-    (is (= [{:location [-1 -2], :score 0.0, :invader "o\no", :sample "?\n?"}
-            {:location [0 -2], :score 0.0, :invader "o\no", :sample "?\n?"}
-            {:location [-1 -1], :score 0.0, :invader "o\no", :sample "?\n?"}
-            {:location [0 -1], :score 0.5, :invader "o\no", :sample "?\no"}
-            {:location [-1 0], :score 0.0, :invader "o\no", :sample "?\n?"}
-            {:location [0 0], :score 0.5, :invader "o\no", :sample "o\n?"}]
+    (is (= [{:location [-1 -2], :score 0.5, :invader "o\no", :sample "?\n?"}
+            {:location [0 -2], :score 0.5, :invader "o\no", :sample "?\n?"}
+            {:location [-1 -1], :score 0.5, :invader "o\no", :sample "?\n?"}
+            {:location [0 -1], :score 0.75, :invader "o\no", :sample "?\no"}
+            {:location [-1 0], :score 0.5, :invader "o\no", :sample "?\n?"}
+            {:location [0 0], :score 0.75, :invader "o\no", :sample "o\n?"}]
   
            (core/scan-for-invader ["o"] ["o" "o"] 0.0))))
   
   (testing "invader wider than radar"
-    (is (= [{:location [-2 -1], :score 0.0, :invader "oo", :sample "??"}
-            {:location [-1 -1], :score 0.0, :invader "oo", :sample "??"}
-            {:location [0 -1], :score 0.0, :invader "oo", :sample "??"}
-            {:location [-2 0], :score 0.0, :invader "oo", :sample "??"}
-            {:location [-1 0], :score 0.5, :invader "oo", :sample "?o"}
-            {:location [0 0], :score 0.5, :invader "oo", :sample "o?"}]
+    (is (= [{:location [-2 -1], :score 0.5, :invader "oo", :sample "??"}
+            {:location [-1 -1], :score 0.5, :invader "oo", :sample "??"}
+            {:location [0 -1], :score 0.5, :invader "oo", :sample "??"}
+            {:location [-2 0], :score 0.5, :invader "oo", :sample "??"}
+            {:location [-1 0], :score 0.75, :invader "oo", :sample "?o"}
+            {:location [0 0], :score 0.75, :invader "oo", :sample "o?"}]
 
            (core/scan-for-invader ["o"] ["oo"] 0.0))))
   
