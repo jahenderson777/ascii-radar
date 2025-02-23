@@ -24,8 +24,10 @@
   (let [paired (map vector a b)
         s (reduce (fn [score [ax bx]]
                     (if (= ax bx) ; we have a match
-                      (+ score 1) 
-                      score))
+                      (+ score 1)
+                      (if (= ax \?)
+                        (+ score 0.5)
+                        score)))
                   0 paired)]
     (float (if (> (count a) 0)
              (/ s (count a))
